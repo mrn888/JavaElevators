@@ -1,7 +1,12 @@
-Download the JavaFx SDK here : https://download2.gluonhq.com/openjfx/17.0.1/openjfx-17.0.1_windows-x64_bin-sdk.zip
-image::src/doc/img/setJavaFxSDK.png[]
+=== Download the JavaFx SDK here :
+https://download2.gluonhq.com/openjfx/17.0.1/openjfx-17.0.1_windows-x64_bin-sdk.zip
 
-Run app :
+image::img/setJavaFxSDK.png[]
+
+=== Run app :
 Set VM Options to
+[source,bash]
+----
 --module-path pathToJavaFxSDK\JavaFx\javafx-sdk-17.0.1\lib --add-modules=javafx.controls,javafx.fxml
-image::src/doc/img/setVmOptions.png[]
+----
+image::img/setVmOptions.png[]
