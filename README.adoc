@@ -1,9 +1,26 @@
+=== Clone repo :
+[source,bash]
+----
+git clone https://github.com/mrn888/JavaElevators.git
+----
+Then open folder *_JavaElevators_* as IdeaProject
+
+Use 11 JDK
+
 === Download the JavaFx SDK here :
 https://download2.gluonhq.com/openjfx/17.0.1/openjfx-17.0.1_windows-x64_bin-sdk.zip
+
+Configure project to use SDK :
 
 image::img/setJavaFxSDK.png[]
 
 === Run app :
+Go to com.nupl.ui.Main and run the Main
+
+It will fail, go to edit configuration
+
+image::img/image-2021-11-27-14-43-17-678.png[]
+
 Set VM Options to
 [source,bash]
 ----
