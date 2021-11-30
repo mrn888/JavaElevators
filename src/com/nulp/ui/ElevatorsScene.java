@@ -67,8 +67,19 @@ public class ElevatorsScene implements IElevatorsScene {
 
     ElevatorsPresenter mElevatorsPresenter;
 
+
     public void setElevatorsPresenter(ElevatorsPresenter mElevatorsPresenter) {
         this.mElevatorsPresenter = mElevatorsPresenter;
+    }
+
+    public void setElevatorsConfiguration(ArrayList<ElevatorConfiguration> elevatorConfigurations,
+                                          int floorNumber, int passengersGenerationSpeed) {
+        for (var config : elevatorConfigurations)
+        {
+            System.out.print(config.getElevatorStrategy().toString() + ", maxWeight: " + config.getMaxWeight() + ", maxPassengers: " +
+                    config.getMaxPassengersNumber() + "\n");
+        }
+        // TODO: implement this method
     }
 
     @FXML

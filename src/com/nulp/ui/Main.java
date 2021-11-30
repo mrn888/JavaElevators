@@ -13,8 +13,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(Objects.requireNonNull
-                (getClass().getResource("mainApp.fxml")));
-        primaryStage.setTitle("Elevator App");
+                (getClass().getResource("elevatorsConfigsWindow.fxml")));
+        primaryStage.setTitle("ElevatorsConfigsWindow");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
