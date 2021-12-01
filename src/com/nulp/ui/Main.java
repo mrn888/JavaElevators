@@ -15,7 +15,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull
                 (getClass().getResource("mainApp.fxml")));
         primaryStage.setTitle("Elevator App");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 300, 400));
         primaryStage.show();
     }
 
