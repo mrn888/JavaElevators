@@ -3,7 +3,7 @@ package com.nulp.logic.demo;
 import com.nulp.logic.configuration.BuildingConfiguration;
 import com.nulp.logic.configuration.ElevatorConfiguration;
 import com.nulp.logic.entities.Building;
-import com.nulp.logic.stratery.PlainStrategy;
+import com.nulp.logic.strategy.PlainStrategy;
 
 import java.util.ArrayList;
 
@@ -16,6 +16,6 @@ public class Main {
         BuildingConfiguration.setInstance(elevators, 3, 10000);
         var buildingConfiguration = BuildingConfiguration.getInstance();
 
-        var building = new Building(buildingConfiguration);
+//        var building = new Building(buildingConfiguration);
     }
 }

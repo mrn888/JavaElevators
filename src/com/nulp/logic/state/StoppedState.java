@@ -15,6 +15,11 @@ public class StoppedState extends ElevatorState {
     }
 
     @Override
+    public void changeFloor() {
+
+    }
+
+    @Override
     public void onCall() {
         elevator.buildRoute();
         elevator.defineDirection();

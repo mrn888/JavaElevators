@@ -10,6 +10,7 @@ public abstract class ElevatorState {
         this.elevator = elevator;
     }
     public abstract void onFloor(IFloor floor);
+    public abstract void changeFloor();
     public abstract void onCall();
     public abstract void onStatus();
     public abstract String getState();

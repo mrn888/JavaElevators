@@ -1,11 +1,11 @@
 package com.nulp.ui;
+import com.nulp.logic.configuration.*;
+import com.nulp.logic.strategy.*;
 
-import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,21 +16,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ElevatorConfigController implements Initializable {
@@ -127,14 +120,14 @@ public class ElevatorConfigController implements Initializable {
                 String elevatorStrategy = ((ChoiceBox<String>) node).getValue();
 
                 if (elevatorStrategy.equals("Plain"))
-                    elevatorConfigurations.get(currentRow).setElevatorStrategy(ElevatorStrategy.Plain);
+                    elevatorConfigurations.get(currentRow).strategy = new PlainStrategy();
                 else if (elevatorStrategy.equals("Preemptive"))
-                    elevatorConfigurations.get(currentRow).setElevatorStrategy(ElevatorStrategy.Preemptive);
+                    elevatorConfigurations.get(currentRow).strategy = new PreemtiveStrategy();
             } else if (GridPane.getColumnIndex(node) == 2) { // max weigth
 
                 try {
                     int maxWeight = Integer.parseInt (((TextField)node).getText());
-                    elevatorConfigurations.get(currentRow).setMaxWeight(maxWeight);
+                    elevatorConfigurations.get(currentRow).weight = maxWeight;
                 } catch(NumberFormatException exc)
                 {
                     generateAlertOnEmptyNumberField("max weigth", currentRow + 1);
@@ -143,7 +136,7 @@ public class ElevatorConfigController implements Initializable {
             } else if (GridPane.getColumnIndex(node) == 3) { // max passengers count
                 try {
                     int maxPassengerNumber = Integer.parseInt (((TextField)node).getText());
-                    elevatorConfigurations.get(currentRow).setMaxPassengersNumber(maxPassengerNumber);
+                    elevatorConfigurations.get(currentRow).capacity = maxPassengerNumber;
                 } catch(NumberFormatException exc)
                 {
                     generateAlertOnEmptyNumberField("max passenger number", currentRow + 1);

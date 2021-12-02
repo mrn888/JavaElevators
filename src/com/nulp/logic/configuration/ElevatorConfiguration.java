@@ -1,6 +1,6 @@
 package com.nulp.logic.configuration;
 
-import com.nulp.logic.stratery.IElevatorStrategy;
+import com.nulp.logic.strategy.IElevatorStrategy;
 
 public class ElevatorConfiguration {
     public IElevatorStrategy strategy;
@@ -9,6 +9,7 @@ public class ElevatorConfiguration {
     public int capacity;
     public int weight;
 
+    public ElevatorConfiguration() {}
     public ElevatorConfiguration(IElevatorStrategy strategy, int id, int speed, int capacity, int weight) {
         this.id = id;
         this.speed = speed;

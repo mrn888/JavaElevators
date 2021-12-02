@@ -14,20 +14,25 @@ public class MovingState extends ElevatorState {
 
     @Override
     public void onFloor(IFloor floor) {
-        // To safely remove
         boolean isEmpty = elevator.popFromRoute();
         if(isEmpty) {
             elevator.changeState(new StoppedState(elevator));
         }
         elevator.buildRoute();
         elevator.defineDirection();
-        Iterator<Passenger> i = floor.getPassengers().iterator();
+        if(!elevator.getStrategy().shouldStopOnFloor(elevator)) return;
+        Iterator<Passenger> i = floor.getPassengers(elevator.getId()).iterator();
         while (i.hasNext()) {
             var passenger = i.next();
             boolean isAdded = elevator.addPassenger(passenger);
             if(isAdded)
                 i.remove();
         }
+    }
+
+    @Override
+    public void changeFloor() {
+        elevator.changeFloor();
     }
 
     @Override

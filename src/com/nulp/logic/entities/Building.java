@@ -2,6 +2,7 @@ package com.nulp.logic.entities;
 
 
 import com.nulp.logic.configuration.BuildingConfiguration;
+import com.nulp.ui.models.IElevatorScene;
 
 import java.util.ArrayList;
 import java.util.TimerTask;
@@ -10,22 +11,34 @@ public class Building {
     private ArrayList<Floor> floors;
     private ArrayList<Elevator> elevators;
 
-
     private BuildingConfiguration buildingConfiguration;
+    private IElevatorScene elevatorScene;
 
-    public Building(BuildingConfiguration buildingConfiguration) {
+    public ArrayList<Elevator> getElevators() {
+        return elevators;
+    }
+    public ArrayList<Floor> getFloors() {
+        return floors;
+    }
+
+    public Building(BuildingConfiguration buildingConfiguration, IElevatorScene elevatorScene) {
         this.buildingConfiguration = buildingConfiguration;
+        this.elevatorScene = elevatorScene;
         createElevators();
         createFloors();
+    }
+
+    public void startPassengerGenerating() {
         for (var floor: floors) {
             floor.startPassengerGenerating();
         }
+    }
+
+    public void startElevatorsMovement() {
         for (var elevator: elevators) {
             elevator.startElevatorMovement();
         }
     }
-
-
 
     private void createFloors() {
         floors = new ArrayList<>(buildingConfiguration.getFloors());
@@ -52,6 +65,7 @@ public class Building {
                 floors.forEach(floor -> {
                     floor.generatePassengers();
                     elevators.forEach(elevator -> elevator.call(floor.id));
+                    elevatorScene.updatePassengers();
                 });
             };
         };
@@ -62,11 +76,13 @@ public class Building {
         var onFloorCallback = new TimerTask() {
             @Override
             public void run() {
-                var floorIndex = elevator.changeFloor();
+                elevator.getState().changeFloor();
+                var floorIndex = elevator.getCurrentFloor();
                 var currentFloor= floors.get(floorIndex);
-//                System.out.println("Passengers on floor[" + floorIndex + "] = " + currentFloor.passengers.size());
+
                 elevator.removePassengers();
                 elevator.getState().onFloor(currentFloor);
+                elevatorScene.moveElevator(elevator, floorIndex);
             }
         };
         return onFloorCallback;

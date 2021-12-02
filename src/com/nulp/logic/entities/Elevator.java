@@ -5,7 +5,7 @@ import com.nulp.logic.configuration.BuildingConfiguration;
 import com.nulp.logic.configuration.ElevatorConfiguration;
 import com.nulp.logic.state.ElevatorState;
 import com.nulp.logic.state.StoppedState;
-import com.nulp.logic.stratery.IElevatorStrategy;
+import com.nulp.logic.strategy.IElevatorStrategy;
 import com.nulp.logic.utils.ElevatorDirection;
 
 import java.util.*;
@@ -19,11 +19,8 @@ public class Elevator implements IElevator {
     private ArrayList<Passenger> passengers;
     private LinkedHashSet<Integer> currentRoute;
     private ArrayList<Integer> callingQueue;
-
     private Timer onFloorTimer;
-
     private TimerTask onFloorCallback;
-
     private int currentFloor;
 
     Elevator(int id, ElevatorConfiguration configuration) {
@@ -38,6 +35,19 @@ public class Elevator implements IElevator {
         this.callingQueue = new ArrayList<>();
         this.currentRoute = new LinkedHashSet<>();
     }
+    public LinkedHashSet<Integer> getCurrentRoute() {
+        return currentRoute;
+    }
+
+    public int getCurrentFloor() {
+        return currentFloor;
+    }
+    public IElevatorStrategy getStrategy() {
+        return strategy;
+    }
+    public int getId() {
+        return id;
+    }
 
     public void setOnFloorCallback(TimerTask onFloorCallback) {
         this.onFloorCallback = onFloorCallback;
@@ -45,11 +55,12 @@ public class Elevator implements IElevator {
 
 
     public void startElevatorMovement() {
-        System.out.println(configuration.speed);
-        onFloorTimer.schedule(onFloorCallback, configuration.speed, configuration.speed);
+//        System.out.println(configuration.speed);
+        onFloorTimer.schedule(onFloorCallback, 0, configuration.speed);
     }
 
     public int changeFloor() {
+        defineDirection();
         int nextFloor = currentFloor + direction.getValue();
         if(isAbleToChangeFloor(nextFloor)) {
             currentFloor = nextFloor;
@@ -77,11 +88,22 @@ public class Elevator implements IElevator {
     }
 
     public void buildRoute() {
-        currentRoute = strategy.buildRoute(this);
+        var route = new LinkedHashSet<Integer>();
+
+        for (var passenger: getPassengers()) {
+            route.add(passenger.getFloorTarget());
+        }
+        for (var floor: getCallingQueue()) {
+            if(!route.contains(floor))
+                route.add(floor);
+        }
+        currentRoute = route;
     }
 
     public boolean popFromRoute() {
-        currentRoute.remove(currentFloor);
+        var currentRouteList = new ArrayList<>(currentRoute);
+        currentRouteList.remove(0);
+        currentRoute = new LinkedHashSet(currentRouteList);
         return currentRoute.isEmpty();
     }
 
@@ -92,7 +114,7 @@ public class Elevator implements IElevator {
         } else if(currentRouteList.get(0) < currentFloor){
             direction = ElevatorDirection.DOWN;
         }
-        System.out.println("Direction: " + direction);
+//        System.out.println("Direction: " + direction);
     }
 
     @Override
@@ -124,10 +146,10 @@ public class Elevator implements IElevator {
 
     private boolean isAbleToChangeFloor(int nextFloor) {
         return nextFloor < BuildingConfiguration.getInstance().getFloors() &&
-                nextFloor >= 1;
+                nextFloor >= 0;
     }
 
-    private int getCurrentWeight() {
+    public int getCurrentWeight() {
         int currentWeight = 0;
         for (var passenger: passengers) {
             currentWeight +=  passenger.getWeight();
@@ -146,4 +168,5 @@ public class Elevator implements IElevator {
     public ElevatorDirection getDirection() {
         return this.direction;
     }
+
 }

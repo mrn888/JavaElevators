@@ -5,18 +5,21 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
+import com.nulp.logic.configuration.*;
 
 public class Floor implements IFloor {
-    private static int MAX_PASSENGERS = 6;
-
     int id;
-    ArrayList<Passenger> passengers;
+    ArrayList<ArrayList<Passenger>> passengers;
     TimerTask passengerGenerator;
     Timer passengerTimer;
     int passengerFrequency;
 
     Floor(int id, int passengerFrequency, TimerTask passengerGenerator) {
         passengers = new ArrayList<>();
+        int elevatorsAmount = BuildingConfiguration.getInstance().getElevatorConfiguration().size();
+        for(int i = 0 ; i < elevatorsAmount; ++i) {
+            passengers.add(new ArrayList<>());
+        }
         this.passengerGenerator = passengerGenerator;
         this.passengerFrequency = passengerFrequency;
         this.id = id;
@@ -26,11 +29,13 @@ public class Floor implements IFloor {
         passengerTimer = new Timer();
     }
 
-    // TODO: REWORK TO GENERATE RANDOM AMOUNT OF PASSENGERS
     public void generatePassengers() {
-        if(passengers.size() + 1 < MAX_PASSENGERS) {
-            passengers.add(new Passenger(Passenger.getRandomPassengerWeight()));
-        }
+        passengers.forEach(queue -> {
+            if(queue.size() + 1 < MainConfiguration.MAX_PASSENGERS) {
+                queue.add(new Passenger(Passenger.getRandomPassengerWeight()));
+            }
+//            System.out.println("Passengers on floor[" + id + "] = " + queue.size());
+        });
     }
 
     public void setPassengerFrequency(int passengerFrequency) {
@@ -39,16 +44,18 @@ public class Floor implements IFloor {
     }
 
     public void startPassengerGenerating() {
-        passengerTimer.schedule(passengerGenerator, this.passengerFrequency, this.passengerFrequency);
+        passengerTimer.schedule(passengerGenerator,0, this.passengerFrequency);
 
     }
     public void stopPassengerGenerating() {
         passengerTimer.cancel();;
         passengerTimer.purge();
     }
-
-    @Override
-    public ArrayList<Passenger> getPassengers() {
+    public ArrayList<ArrayList<Passenger>> getPassengers() {
         return passengers;
+    }
+    @Override
+    public ArrayList<Passenger> getPassengers(int elevator) {
+        return passengers.get(elevator);
     }
 }
