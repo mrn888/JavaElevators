@@ -92,6 +92,7 @@ public class Elevator implements IElevator {
 
         for (var passenger: getPassengers()) {
             route.add(passenger.getFloorTarget());
+
         }
         for (var floor: getCallingQueue()) {
             if(!route.contains(floor))
@@ -101,9 +102,7 @@ public class Elevator implements IElevator {
     }
 
     public boolean popFromRoute() {
-        var currentRouteList = new ArrayList<>(currentRoute);
-        currentRouteList.remove(0);
-        currentRoute = new LinkedHashSet(currentRouteList);
+        currentRoute.remove(currentFloor);
         return currentRoute.isEmpty();
     }
 
