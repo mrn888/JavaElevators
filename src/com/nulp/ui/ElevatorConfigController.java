@@ -51,13 +51,10 @@ public class ElevatorConfigController implements Initializable {
         this.floorNumber = floorNumber;
         this.elevatorNumber = elevatorNumber;
         this.passengersGenerationSpeed = passengersGenerationSpeed;
-    }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
         elevatorConfigurations = new ArrayList<>(elevatorNumber);
 
-        for (int i = 0; i < 6; ++i) { // <== TODO: Change this hardcoded 6 to "elevatorNumber"
+        for (int i = 0; i < elevatorNumber; ++i) {
             elevatorConfigurations.add(new ElevatorConfiguration());
 
             elevatorsConfigDataGrid.addRow(i);
@@ -95,9 +92,21 @@ public class ElevatorConfigController implements Initializable {
             });
             elevatorsConfigDataGrid.add(maxPeopleInElevator, 3, i);
             elevatorsConfigDataGrid.setHalignment(getNodeFromGridPane(elevatorsConfigDataGrid, 3, i), HPos.CENTER);
+
+
+            var elevatorSpeed = new javafx.scene.control.TextField();
+            elevatorSpeed.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+                    if (!newValue.matches("\\d*")) {
+                        elevatorSpeed.setText(newValue.replaceAll("[^\\d]", ""));
+                    }
+                }
+            });
+            elevatorsConfigDataGrid.add(elevatorSpeed, 4, i);
+            elevatorsConfigDataGrid.setHalignment(getNodeFromGridPane(elevatorsConfigDataGrid, 4, i), HPos.CENTER);
         }
     }
-
 
     private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
         for (Node node : gridPane.getChildren()) {
@@ -142,6 +151,15 @@ public class ElevatorConfigController implements Initializable {
                     generateAlertOnEmptyNumberField("max passenger number", currentRow + 1);
                     return;
                 }
+            } else if (GridPane.getColumnIndex(node) == 4) { // speed
+                try {
+                    int maxElevators = Integer.parseInt (((TextField)node).getText());
+                    elevatorConfigurations.get(currentRow).speed = maxElevators;
+                } catch(NumberFormatException exc)
+                {
+                    generateAlertOnEmptyNumberField("elevator speed", currentRow + 1);
+                    return;
+                }
             }
         }
 
@@ -160,6 +178,8 @@ public class ElevatorConfigController implements Initializable {
     void runSimulationWindow(ActionEvent actionEvent)
     {
         try {
+            BuildingConfiguration.setInstance(elevatorConfigurations, floorNumber,
+                    passengersGenerationSpeed);
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("mainApp.fxml"));
             simulationWindowRoot = loader.load();
@@ -168,10 +188,13 @@ public class ElevatorConfigController implements Initializable {
             simulationWindowScene = new Scene(simulationWindowRoot);
             simulationWindowStage.setScene(simulationWindowScene);
 
-            ElevatorsScene s = loader.getController();
-            s.setElevatorsConfiguration(elevatorConfigurations, floorNumber, passengersGenerationSpeed);
         } catch (IOException exc) {
 
         }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
     }
 }

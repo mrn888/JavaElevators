@@ -28,8 +28,9 @@
             </padding>
         </ScrollPane>
         <Label layoutX="34.0" layoutY="35.0" text="Ліфт" />
-        <Label layoutX="127.0" layoutY="35.0" text="Тип ліфта" />
-        <Label layoutX="251.0" layoutY="35.0" text="Макс. вага" />
-        <Label layoutX="352.0" layoutY="35.0" text="К-сть людей" />
+        <Label layoutX="100.0" layoutY="35.0" text="Тип ліфта" />
+        <Label layoutX="200.0" layoutY="35.0" text="Вага" />
+        <Label layoutX="250.0" layoutY="35.0" text="К-сть людей" />
+        <Label layoutX="330.0" layoutY="35.0" text="Швидкість" />
     </children>
 </AnchorPane>

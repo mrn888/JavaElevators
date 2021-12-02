@@ -44,7 +44,6 @@ public class ElevatorsScene implements IElevatorScene  {
     private Group mElements = new Group();
 
 
-
     private Building mBuilding;
     private List<ElevatorView> mElevatorViews = new ArrayList<>();
     private List<Rectangle> mFloors = new ArrayList<>();
@@ -54,25 +53,10 @@ public class ElevatorsScene implements IElevatorScene  {
     private int mElevatorCount ;
 
 
-    public void setElevatorsConfiguration(ArrayList<ElevatorConfiguration> elevatorConfigurations,
-                                          int floorNumber, int passengersGenerationSpeed) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull
-                (getClass().getResource("mainApp.fxml")));
-    }
 
     @FXML
     void initialize() {
-        nextButton.setOnAction(actionEvent -> {
-            var elevators = new ArrayList<ElevatorConfiguration>();
-            for(int i = 0; i < 1; ++i) {
-                elevators.add(new ElevatorConfiguration(new PlainStrategy(), 0, (i + 1)*1000, 4, 500));
-            }
-            BuildingConfiguration.setInstance(elevators, 3, 10000);
-
-            start();
-
-            nextButton.setVisible(false);
-        });
+        start();
     }
 
     public void start() {
@@ -92,6 +76,7 @@ public class ElevatorsScene implements IElevatorScene  {
                 + MainConfiguration.ELEVATOR_LEFT_MARGIN * mElevatorCount + ElevatorView.HEIGHT);
         mPane.getChildren().addAll(initializeFloorNumber());
 
+        // TODO: ADD BUTTONS TO TURN ON/OFF PASSENGER GENERATING/ELEVATORS
         mBuilding.startPassengerGenerating();
         mBuilding.startElevatorsMovement();
     }

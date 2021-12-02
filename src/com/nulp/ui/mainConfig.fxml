@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nulp.ui.Controller">
+    <children>
+        <TextField fx:id="floorcountid" layoutX="168.0" layoutY="106.0" prefHeight="26.0" prefWidth="110.0" AnchorPane.rightAnchor="22.0" />
+        <TextField fx:id="elevatorcountid" layoutX="167.0" layoutY="173.0" prefHeight="26.0" prefWidth="110.0" AnchorPane.rightAnchor="22.0" />
+        <TextField fx:id="humanspeedid" layoutX="167.0" layoutY="240.0" prefHeight="26.0" prefWidth="110.0" AnchorPane.rightAnchor="22.0" />
+        <Label layoutX="37.0" layoutY="110.0" text="Кількість поверхів" />
+        <Label layoutX="45.0" layoutY="177.0" text="Кількість ліфтів" />
+        <Label layoutX="12.0" layoutY="244.0" text="Швидкість генерації людей" wrapText="true" />
+        <Button fx:id="button1" layoutX="124.0" layoutY="325.0" mnemonicParsing="false" onAction="#readFields" text="Далі" />
+    </children>
+</AnchorPane>
