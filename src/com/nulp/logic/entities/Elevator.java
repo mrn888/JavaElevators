@@ -7,10 +7,14 @@ import com.nulp.logic.state.ElevatorState;
 import com.nulp.logic.state.StoppedState;
 import com.nulp.logic.strategy.IElevatorStrategy;
 import com.nulp.logic.utils.ElevatorDirection;
+import com.nulp.logic.utils.MyLogger;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Elevator implements IElevator {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
+
     private int id;
     private ElevatorState state;
     private ElevatorDirection direction;
@@ -34,6 +38,7 @@ public class Elevator implements IElevator {
         this.passengers = new ArrayList<>();
         this.callingQueue = new ArrayList<>();
         this.currentRoute = new LinkedHashSet<>();
+        LOGGER.info("Created elevator : " + this);
     }
     public LinkedHashSet<Integer> getCurrentRoute() {
         return currentRoute;
@@ -65,7 +70,7 @@ public class Elevator implements IElevator {
         if(isAbleToChangeFloor(nextFloor)) {
             currentFloor = nextFloor;
         }
-        System.out.println("Elevator " + id + " on floor " + currentFloor);
+        LOGGER.info("Elevator " + id + " on floor " + currentFloor);
 
         return currentFloor;
     }
@@ -168,4 +173,20 @@ public class Elevator implements IElevator {
         return this.direction;
     }
 
+    @Override
+    public String toString() {
+        return "Elevator{" +
+                "id=" + id +
+                ", state=" + state +
+                ", direction=" + direction +
+                ", strategy=" + strategy +
+                ", configuration=" + configuration +
+                ", passengers=" + passengers +
+                ", currentRoute=" + currentRoute +
+                ", callingQueue=" + callingQueue +
+                ", onFloorTimer=" + onFloorTimer +
+                ", onFloorCallback=" + onFloorCallback +
+                ", currentFloor=" + currentFloor +
+                '}';
+    }
 }

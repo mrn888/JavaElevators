@@ -1,5 +1,6 @@
 package com.nulp.ui;
 
+import com.nulp.logic.utils.MyLogger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,8 +14,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class Controller implements Initializable {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
+
     @FXML
     public Button button1;
     public TextField floorcountid;
@@ -41,6 +45,9 @@ public class Controller implements Initializable {
         stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
+
+        LOGGER.info("Got basic configurations : floors count = " + floorCounter +
+                ", elevator count = " + elevatorCounter + ", human generation speed = " + humanGenerationSpeed);
 
         var s = (ElevatorConfigController)loader.getController();
         s.setBaseConfiguration(Integer.parseInt(floorcountid.getText()),

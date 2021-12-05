@@ -2,6 +2,7 @@ package com.nulp.ui;
 import com.nulp.logic.configuration.*;
 import com.nulp.logic.strategy.*;
 
+import com.nulp.logic.utils.MyLogger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -25,8 +26,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class ElevatorConfigController implements Initializable {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
 
     @FXML
     private AnchorPane scene;
@@ -53,6 +56,7 @@ public class ElevatorConfigController implements Initializable {
         this.passengersGenerationSpeed = passengersGenerationSpeed;
 
         elevatorConfigurations = new ArrayList<>(elevatorNumber);
+        LOGGER.info("Set base configuration to Elevator Config Controller");
 
         for (int i = 0; i < elevatorNumber; ++i) {
             elevatorConfigurations.add(new ElevatorConfiguration());
@@ -118,6 +122,7 @@ public class ElevatorConfigController implements Initializable {
     }
 
     public void runSimulation(ActionEvent actionEvent) throws IOException {
+        LOGGER.info("Start elevators simulation");
         int currentRow;
         for (Node node : elevatorsConfigDataGrid.getChildren()) {
             currentRow = GridPane.getRowIndex(node);
@@ -168,6 +173,7 @@ public class ElevatorConfigController implements Initializable {
 
     void generateAlertOnEmptyNumberField(String fieldName, int atRow)
     {
+        LOGGER.info("Enter empty value");
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Invalid data");
         alert.setContentText("Empty " + fieldName + " for " + "Elevator" + atRow);
@@ -178,6 +184,7 @@ public class ElevatorConfigController implements Initializable {
     void runSimulationWindow(ActionEvent actionEvent)
     {
         try {
+            LOGGER.info("Main simulation window running...");
             BuildingConfiguration.setInstance(elevatorConfigurations, floorNumber,
                     passengersGenerationSpeed);
             FXMLLoader loader = new FXMLLoader();

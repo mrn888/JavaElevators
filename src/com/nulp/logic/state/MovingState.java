@@ -4,10 +4,14 @@ package com.nulp.logic.state;
 import com.nulp.logic.entities.Elevator;
 import com.nulp.logic.entities.IFloor;
 import com.nulp.logic.entities.Passenger;
+import com.nulp.logic.utils.MyLogger;
 
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 public class MovingState extends ElevatorState {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
+
     MovingState(Elevator elevator) {
         super(elevator);
     }

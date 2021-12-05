@@ -1,6 +1,7 @@
 package com.nulp.ui.models;
 
 import com.nulp.logic.configuration.MainConfiguration;
+import com.nulp.logic.utils.MyLogger;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -10,8 +11,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.Stack;
+import java.util.logging.Logger;
 
 public class PassengerView {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
     public static final int WIDTH = MainConfiguration.ELEVATOR_LEFT_MARGIN / MainConfiguration.MAX_PASSENGERS;
     public static final int HEIGHT = ElevatorView.HEIGHT;
 

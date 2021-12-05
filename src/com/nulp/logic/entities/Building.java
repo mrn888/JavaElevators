@@ -2,12 +2,16 @@ package com.nulp.logic.entities;
 
 
 import com.nulp.logic.configuration.BuildingConfiguration;
+import com.nulp.logic.utils.MyLogger;
 import com.nulp.ui.models.IElevatorScene;
 
 import java.util.ArrayList;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 public class Building {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
+
     private ArrayList<Floor> floors;
     private ArrayList<Elevator> elevators;
 
@@ -29,12 +33,14 @@ public class Building {
     }
 
     public void startPassengerGenerating() {
+        LOGGER.info("Started passengers generating");
         for (var floor: floors) {
             floor.startPassengerGenerating();
         }
     }
 
     public void startElevatorsMovement() {
+        LOGGER.info("Started elevators movement");
         for (var elevator: elevators) {
             elevator.startElevatorMovement();
         }
@@ -55,6 +61,7 @@ public class Building {
                     buildingConfiguration.getElevatorConfiguration().get(i));
             elevator.setOnFloorCallback(createElevatorOnFloorCallback(elevator));
             elevators.add(elevator);
+            LOGGER.info("Created elevator with configuration " + buildingConfiguration.getElevatorConfiguration().get(i));
         }
     }
 

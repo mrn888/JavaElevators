@@ -2,8 +2,12 @@ package com.nulp.logic.state;
 
 import com.nulp.logic.entities.Elevator;
 import com.nulp.logic.entities.IFloor;
+import com.nulp.logic.utils.MyLogger;
+
+import java.util.logging.Logger;
 
 public class StoppedState extends ElevatorState {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
 
     public StoppedState(Elevator elevator) {
         super(elevator);

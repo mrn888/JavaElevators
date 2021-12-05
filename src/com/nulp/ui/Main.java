@@ -1,5 +1,6 @@
 package com.nulp.ui;
 
+import com.nulp.logic.utils.MyLogger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,11 +8,16 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main extends Application {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        LOGGER.info("Start application");
         Parent root = FXMLLoader.load(Objects.requireNonNull
                 (getClass().getResource("mainConfig.fxml")));
         primaryStage.setTitle("ElevatorsConfigsWindow");

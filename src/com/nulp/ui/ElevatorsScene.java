@@ -3,6 +3,7 @@ package com.nulp.ui;
 import com.nulp.logic.configuration.*;
 import com.nulp.logic.strategy.*;
 import com.nulp.logic.entities.*;
+import com.nulp.logic.utils.MyLogger;
 import com.nulp.ui.models.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -24,9 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class ElevatorsScene implements IElevatorScene  {
-
+    private static final Logger LOGGER = MyLogger.getLOGGER();
 
     BuildingConfiguration buildingConfiguration;
 
@@ -60,6 +62,7 @@ public class ElevatorsScene implements IElevatorScene  {
     }
 
     public void start() {
+        LOGGER.info("Building the scene background");
         buildingConfiguration = BuildingConfiguration.getInstance();
         mFloorCount = buildingConfiguration.getFloors();
         mElevatorCount = buildingConfiguration.getElevatorConfiguration().size();
@@ -82,6 +85,7 @@ public class ElevatorsScene implements IElevatorScene  {
     }
 
     public List<Label> initializeFloorNumber() {
+        LOGGER.info("Initializing the floor number");
         List<Label> floorNumbers = new ArrayList<>();
 
         for (int i = 0; i < mFloorCount; i++) {
@@ -102,6 +106,7 @@ public class ElevatorsScene implements IElevatorScene  {
     }
 
     public void initializeFloors() {
+        LOGGER.info("Initializing the floors itself");
         for (int i = 0; i < mFloorCount; i++) {
             Rectangle rectangle = new Rectangle();
 
@@ -123,6 +128,7 @@ public class ElevatorsScene implements IElevatorScene  {
     }
 
     public void initializeElevators() {
+        LOGGER.info("Initializing elevators");
         for (int i = 0; i < mBuilding.getElevators().size(); i++) {
             StackPane stack = new StackPane();
 
@@ -144,6 +150,7 @@ public class ElevatorsScene implements IElevatorScene  {
     }
 
     public void initializePassengers() {
+        LOGGER.info("Initializing passengers");
         for(int j = 0; j < mFloorCount; ++j) {
             for (int k = 0; k <  mElevatorCount; k++) {
                 for (int i = 0; i < MainConfiguration.MAX_PASSENGERS; i++) {

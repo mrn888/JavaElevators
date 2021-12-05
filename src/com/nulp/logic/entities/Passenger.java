@@ -28,4 +28,12 @@ public class Passenger {
     public int getRandomTargetFloor(int maxFloor) {
         return ThreadLocalRandom.current().nextInt(1, maxFloor);
     }
+
+    @Override
+    public String toString() {
+        return "Passenger{" +
+                "weight=" + weight +
+                ", floorTarget=" + floorTarget +
+                '}';
+    }
 }

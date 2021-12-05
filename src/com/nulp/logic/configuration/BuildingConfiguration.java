@@ -1,9 +1,14 @@
 package com.nulp.logic.configuration;
 
 
+import com.nulp.logic.utils.MyLogger;
+
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class BuildingConfiguration {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
+
     private static BuildingConfiguration instance;
     private ArrayList<ElevatorConfiguration> elevatorConfiguration;
     private int passengerFrequency;
@@ -21,6 +26,7 @@ public class BuildingConfiguration {
         this.elevatorConfiguration = elevatorConfiguration;
         this.passengerFrequency = passengerFrequency;
         this.floors = floors;
+        LOGGER.info("Created building configuration");
     }
 
 

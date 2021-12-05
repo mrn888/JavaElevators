@@ -1,6 +1,7 @@
 package com.nulp.ui.models;
 
 import com.nulp.logic.configuration.ElevatorConfiguration;
+import com.nulp.logic.utils.MyLogger;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
@@ -14,8 +15,11 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ElevatorView {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
+
     public static final int WIDTH = 75;
     public static final int HEIGHT = 90;
 

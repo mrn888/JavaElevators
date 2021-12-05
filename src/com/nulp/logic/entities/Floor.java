@@ -5,9 +5,14 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
+
 import com.nulp.logic.configuration.*;
+import com.nulp.logic.utils.MyLogger;
 
 public class Floor implements IFloor {
+    private static final Logger LOGGER = MyLogger.getLOGGER();
+
     int id;
     ArrayList<ArrayList<Passenger>> passengers;
     TimerTask passengerGenerator;
@@ -27,12 +32,15 @@ public class Floor implements IFloor {
         setPassengerFrequency(this.passengerFrequency);
 
         passengerTimer = new Timer();
+        LOGGER.info("Created floor : " + this);
     }
 
     public void generatePassengers() {
         passengers.forEach(queue -> {
             if(queue.size() + 1 < MainConfiguration.MAX_PASSENGERS) {
-                queue.add(new Passenger(Passenger.getRandomPassengerWeight()));
+                Passenger passenger = new Passenger(Passenger.getRandomPassengerWeight());
+                queue.add(passenger);
+                LOGGER.info("Created random passenger : " + passenger);
             }
 //            System.out.println("Passengers on floor[" + id + "] = " + queue.size());
         });
@@ -57,5 +65,16 @@ public class Floor implements IFloor {
     @Override
     public ArrayList<Passenger> getPassengers(int elevator) {
         return passengers.get(elevator);
+    }
+
+    @Override
+    public String toString() {
+        return "Floor{" +
+                "id=" + id +
+                ", passengers=" + passengers +
+                ", passengerGenerator=" + passengerGenerator +
+                ", passengerTimer=" + passengerTimer +
+                ", passengerFrequency=" + passengerFrequency +
+                '}';
     }
 }
