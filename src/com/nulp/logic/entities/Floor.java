@@ -42,7 +42,6 @@ public class Floor implements IFloor {
                 queue.add(passenger);
                 LOGGER.info("Created random passenger : " + passenger);
             }
-//            System.out.println("Passengers on floor[" + id + "] = " + queue.size());
         });
     }
 
@@ -52,7 +51,7 @@ public class Floor implements IFloor {
     }
 
     public void startPassengerGenerating() {
-        passengerTimer.schedule(passengerGenerator,0, this.passengerFrequency);
+        passengerTimer.schedule(passengerGenerator,2, this.passengerFrequency);
 
     }
     public void stopPassengerGenerating() {

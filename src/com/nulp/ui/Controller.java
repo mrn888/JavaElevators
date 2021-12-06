@@ -1,5 +1,6 @@
 package com.nulp.ui;
 
+import com.nulp.logic.configuration.MainConfiguration;
 import com.nulp.logic.utils.MyLogger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +33,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        floorcountid.setText(String.valueOf(MainConfiguration.DEFAULT_FLOORS));
+        elevatorcountid.setText(String.valueOf(MainConfiguration.DEFAULT_ELEVATORS));
+        humanspeedid.setText(String.valueOf(MainConfiguration.DEFAULT_PASSENGERS_GENERATION_SPEED));
     }
 
     public void readFields(javafx.event.ActionEvent actionEvent) throws IOException {

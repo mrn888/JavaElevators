@@ -74,6 +74,7 @@ public class ElevatorConfigController implements Initializable {
             elevatorsConfigDataGrid.setHalignment(getNodeFromGridPane(elevatorsConfigDataGrid, 1, i), HPos.CENTER);
 
             var maxWeightTextBox = new javafx.scene.control.TextField();
+            maxWeightTextBox.setText(String.valueOf(MainConfiguration.DEFAULT_WEIGHT));
             maxWeightTextBox.textProperty().addListener(new ChangeListener<String>() {
                 @Override
                 public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
@@ -86,6 +87,7 @@ public class ElevatorConfigController implements Initializable {
             elevatorsConfigDataGrid.setHalignment(getNodeFromGridPane(elevatorsConfigDataGrid, 2, i), HPos.CENTER);
 
             var maxPeopleInElevator = new javafx.scene.control.TextField();
+            maxPeopleInElevator.setText(String.valueOf(MainConfiguration.DEFAULT_PASSENGERS));
             maxPeopleInElevator.textProperty().addListener(new ChangeListener<String>() {
                 @Override
                 public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
@@ -99,6 +101,7 @@ public class ElevatorConfigController implements Initializable {
 
 
             var elevatorSpeed = new javafx.scene.control.TextField();
+            elevatorSpeed.setText(String.valueOf(MainConfiguration.DEFAULT_ELEVATOR_SPEED));
             elevatorSpeed.textProperty().addListener(new ChangeListener<String>() {
                 @Override
                 public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {

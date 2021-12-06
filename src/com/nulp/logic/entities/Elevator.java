@@ -30,7 +30,7 @@ public class Elevator implements IElevator {
     Elevator(int id, ElevatorConfiguration configuration) {
         this.id = id;
         this.configuration = configuration;
-        this.currentFloor = 1;
+        this.currentFloor = 0;
         this.direction = ElevatorDirection.UP;
         this.onFloorTimer = new Timer();
         this.state = new StoppedState(this);

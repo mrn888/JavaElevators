@@ -26,7 +26,7 @@ public class Passenger {
     }
 
     public int getRandomTargetFloor(int maxFloor) {
-        return ThreadLocalRandom.current().nextInt(1, maxFloor);
+        return ThreadLocalRandom.current().nextInt(0, maxFloor);
     }
 
     @Override
