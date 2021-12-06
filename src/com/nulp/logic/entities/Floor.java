@@ -17,6 +17,7 @@ public class Floor implements IFloor {
     ArrayList<ArrayList<Passenger>> passengers;
     TimerTask passengerGenerator;
     Timer passengerTimer;
+    Boolean isActive;
     int passengerFrequency;
 
     Floor(int id, int passengerFrequency, TimerTask passengerGenerator) {
@@ -51,13 +52,19 @@ public class Floor implements IFloor {
     }
 
     public void startPassengerGenerating() {
+        this.isActive = true;
         passengerTimer.schedule(passengerGenerator,2, this.passengerFrequency);
 
     }
+
     public void stopPassengerGenerating() {
-        passengerTimer.cancel();;
-        passengerTimer.purge();
+        if (this.isActive) {
+            this.isActive = false;
+            passengerTimer.cancel();
+            passengerTimer.purge();
+        }
     }
+
     public ArrayList<ArrayList<Passenger>> getPassengers() {
         return passengers;
     }

@@ -39,10 +39,24 @@ public class Building {
         }
     }
 
+    public void stopPassengerGenerating() {
+        LOGGER.info("Stop passengers generating");
+        for (var floor: floors) {
+            floor.stopPassengerGenerating();
+        }
+    }
+
     public void startElevatorsMovement() {
         LOGGER.info("Started elevators movement");
         for (var elevator: elevators) {
             elevator.startElevatorMovement();
+        }
+    }
+
+    public void stopElevatorsMovement() {
+        LOGGER.info("Stop elevators movement");
+        for (var elevator: elevators) {
+            elevator.stopElevatorMovement();
         }
     }
 

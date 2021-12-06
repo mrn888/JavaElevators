@@ -54,9 +54,14 @@ public class ElevatorsScene implements IElevatorScene  {
         MenuItem stopGeneration = new MenuItem("Stop passengers generation");
 
         startElevators.setOnAction(e -> building.startElevatorsMovement());
+        stopElevators.setOnAction(e -> building.stopElevatorsMovement());
         startGeneration.setOnAction(e -> {
             System.out.println("Start generating");
             building.startPassengerGenerating();
+        });
+        stopGeneration.setOnAction(e -> {
+            System.out.println("Stop generating");
+            building.stopPassengerGenerating();
         });
 
         elevatorMenu.getItems().addAll(startElevators, stopElevators);

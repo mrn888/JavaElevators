@@ -26,6 +26,7 @@ public class Elevator implements IElevator {
     private Timer onFloorTimer;
     private TimerTask onFloorCallback;
     private int currentFloor;
+    private Boolean isActive = true;
 
     Elevator(int id, ElevatorConfiguration configuration) {
         this.id = id;
@@ -61,7 +62,21 @@ public class Elevator implements IElevator {
 
     public void startElevatorMovement() {
 //        System.out.println(configuration.speed);
-        onFloorTimer.schedule(onFloorCallback, 0, configuration.speed);
+        if (!isActive) {
+            this.isActive = true;
+            onFloorTimer = new Timer();
+            onFloorTimer.schedule(onFloorCallback, 0, configuration.speed);
+        } else {
+            onFloorTimer.schedule(onFloorCallback, 0, configuration.speed);
+        }
+    }
+
+    public void stopElevatorMovement() {
+        if (this.isActive) {
+            this.isActive = false;
+            onFloorTimer.cancel();
+            onFloorTimer.purge();
+        }
     }
 
     public int changeFloor() {
