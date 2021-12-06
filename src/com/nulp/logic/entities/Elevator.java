@@ -12,7 +12,7 @@ import com.nulp.logic.utils.MyLogger;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class Elevator implements IElevator {
+public class Elevator implements IElevator, Runnable {
     private static final Logger LOGGER = MyLogger.getLOGGER();
 
     private int id;
@@ -203,5 +203,11 @@ public class Elevator implements IElevator {
                 ", onFloorCallback=" + onFloorCallback +
                 ", currentFloor=" + currentFloor +
                 '}';
+    }
+
+    @Override
+    public void run() {
+        LOGGER.info("Running elevator [" +
+                Thread.currentThread().getName() + "].");
     }
 }

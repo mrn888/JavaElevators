@@ -14,6 +14,7 @@ public class Building {
 
     private ArrayList<Floor> floors;
     private ArrayList<Elevator> elevators;
+    private ArrayList<Thread> elevatorThreads;
 
     private BuildingConfiguration buildingConfiguration;
     private IElevatorScene elevatorScene;
@@ -58,6 +59,9 @@ public class Building {
         for (var elevator: elevators) {
             elevator.stopElevatorMovement();
         }
+        for (var elevatorTh: elevatorThreads) {
+            elevatorTh.interrupt();
+        }
     }
 
     private void createFloors() {
@@ -70,11 +74,17 @@ public class Building {
     private void createElevators() {
         int elevatorsAmount = buildingConfiguration.getElevatorConfiguration().size();
         elevators = new ArrayList<>(elevatorsAmount);
+        elevatorThreads = new ArrayList<>(elevatorsAmount);
         for(int i = 0; i < elevatorsAmount; ++i) {
             var elevator = new Elevator(i,
                     buildingConfiguration.getElevatorConfiguration().get(i));
             elevator.setOnFloorCallback(createElevatorOnFloorCallback(elevator));
             elevators.add(elevator);
+
+            Thread elevatorThread = new Thread(elevator);
+            elevatorThread.start();
+            elevatorThreads.add(elevatorThread);
+
             LOGGER.info("Created elevator with configuration " + buildingConfiguration.getElevatorConfiguration().get(i));
         }
     }
