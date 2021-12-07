@@ -35,6 +35,7 @@ public class Building {
 
     public void startPassengerGenerating() {
         LOGGER.info("Started passengers generating");
+        setPassengersGenerator();
         for (var floor: floors) {
             floor.startPassengerGenerating();
         }
@@ -49,6 +50,7 @@ public class Building {
 
     public void startElevatorsMovement() {
         LOGGER.info("Started elevators movement");
+        setElevatorsGenerator();
         for (var elevator: elevators) {
             elevator.startElevatorMovement();
         }
@@ -67,10 +69,10 @@ public class Building {
     private void createFloors() {
         floors = new ArrayList<>(buildingConfiguration.getFloors());
         for(int i = 0; i < buildingConfiguration.getFloors(); ++i) {
-            floors.add(new Floor(i, buildingConfiguration.getPassengerFrequency(), createPassengerGenerator()));
+            floors.add(new Floor(i, buildingConfiguration.getPassengerFrequency()));
         }
-
     }
+
     private void createElevators() {
         int elevatorsAmount = buildingConfiguration.getElevatorConfiguration().size();
         elevators = new ArrayList<>(elevatorsAmount);
@@ -78,7 +80,6 @@ public class Building {
         for(int i = 0; i < elevatorsAmount; ++i) {
             var elevator = new Elevator(i,
                     buildingConfiguration.getElevatorConfiguration().get(i));
-            elevator.setOnFloorCallback(createElevatorOnFloorCallback(elevator));
             elevators.add(elevator);
 
             Thread elevatorThread = new Thread(elevator);
@@ -89,15 +90,25 @@ public class Building {
         }
     }
 
-    private TimerTask createPassengerGenerator() {
+    private void setPassengersGenerator() {
+        for(int i = 0; i < floors.size(); ++i) {
+            floors.get(i).setPassengerGenerator(createPassengerGenerator(floors.get(i)));
+        }
+    }
+
+    private void setElevatorsGenerator() {
+        for(int i = 0; i < elevators.size(); ++i) {
+            elevators.get(i).setOnFloorCallback(createElevatorOnFloorCallback(elevators.get(i)));
+        }
+    }
+
+    private TimerTask createPassengerGenerator(Floor floor) {
         var passengerGenerator = new TimerTask() {
             @Override
             public void run() {
-                floors.forEach(floor -> {
-                    floor.generatePassengers();
-                    elevators.forEach(elevator -> elevator.call(floor.id));
-                    elevatorScene.updatePassengers();
-                });
+                floor.generatePassengers();
+                elevators.forEach(elevator -> elevator.call(floor.id));
+                elevatorScene.updatePassengers();
             };
         };
         return passengerGenerator;
@@ -111,7 +122,6 @@ public class Building {
                 var floorIndex = elevator.getCurrentFloor();
                 var currentFloor= floors.get(floorIndex);
 
-                elevator.removePassengers();
                 elevator.getState().onFloor(currentFloor);
                 elevatorScene.moveElevator(elevator, floorIndex);
             }

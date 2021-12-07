@@ -19,18 +19,19 @@ public class MovingState extends ElevatorState {
     @Override
     public void onFloor(IFloor floor) {
         if(!elevator.getStrategy().shouldStopOnFloor(elevator)) return;
+        elevator.removePassengers();
         boolean isEmpty = elevator.popFromRoute();
-        if(isEmpty) {
-            elevator.changeState(new StoppedState(elevator));
-        }
-        elevator.buildRoute();
-        elevator.defineDirection();
+        LOGGER.info("CURRENT ROUTE: " + elevator.getCurrentRoute());
+
         Iterator<Passenger> i = floor.getPassengers(elevator.getId()).iterator();
         while (i.hasNext()) {
             var passenger = i.next();
             boolean isAdded = elevator.addPassenger(passenger);
             if(isAdded)
                 i.remove();
+        }
+        if(elevator.getCurrentRoute().size() == 0) {
+            elevator.changeState(new StoppedState(elevator));
         }
     }
 
@@ -41,13 +42,8 @@ public class MovingState extends ElevatorState {
 
     @Override
     public void onCall() {
-
     }
 
-    @Override
-    public void onStatus() {
-
-    }
 
     @Override
     public String getState() {

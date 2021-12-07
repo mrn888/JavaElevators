@@ -9,11 +9,11 @@ public class MainConfiguration {
 
     public static final int PASSENGER_ONE_ELEVATOR_MOVE_DURATION = 1000;
 
-    public static final int DEFAULT_FLOORS = 4;
-    public static final int DEFAULT_ELEVATORS = 4;
-    public static final int DEFAULT_PASSENGERS_GENERATION_SPEED = 10000;
+    public static final int DEFAULT_FLOORS = 3;
+    public static final int DEFAULT_ELEVATORS = 1;
+    public static final int DEFAULT_PASSENGERS_GENERATION_SPEED = 10;
 
     public static final int DEFAULT_WEIGHT = 500;
     public static final int DEFAULT_PASSENGERS = 6;
-    public static final int DEFAULT_ELEVATOR_SPEED = 1000;
+    public static final int DEFAULT_ELEVATOR_SPEED = 5;
 }

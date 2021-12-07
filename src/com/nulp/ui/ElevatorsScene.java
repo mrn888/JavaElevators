@@ -96,7 +96,7 @@ public class ElevatorsScene implements IElevatorScene  {
         List<Label> floorNumbers = new ArrayList<>();
 
         for (int i = 0; i < floorCount; i++) {
-            Label label = new Label(String.valueOf(floorCount - i));
+            Label label = new Label(String.valueOf(floorCount - i - 1));
             label.setStyle("-fx-font-size: 52");
             label.setMaxWidth(ElevatorView.HEIGHT);
             if ((floorCount - i) < 10)
@@ -208,7 +208,6 @@ public class ElevatorsScene implements IElevatorScene  {
                 var passengers = building.getFloors().get(j).getPassengers(i);
                 for(int k = 0; k < passengers.size(); ++k) {
                     int index = getPassengerIndex(j, i, k);
-//                    System.out.println("floor " + j + " ,elevator " + i + " ,index " + k + " = " + index);
                     var passengerView = passengerViews.get(index);
                     int finalK = k;
                     Platform.runLater(new Runnable() {

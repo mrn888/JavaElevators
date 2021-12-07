@@ -21,8 +21,7 @@ public class Elevator implements IElevator, Runnable {
     private IElevatorStrategy strategy;
     private ElevatorConfiguration configuration;
     private ArrayList<Passenger> passengers;
-    private LinkedHashSet<Integer> currentRoute;
-    private ArrayList<Integer> callingQueue;
+    private LinkedList<Integer> currentRoute;
     private Timer onFloorTimer;
     private TimerTask onFloorCallback;
     private int currentFloor;
@@ -37,11 +36,10 @@ public class Elevator implements IElevator, Runnable {
         this.state = new StoppedState(this);
         this.strategy = configuration.strategy;
         this.passengers = new ArrayList<>();
-        this.callingQueue = new ArrayList<>();
-        this.currentRoute = new LinkedHashSet<>();
+        this.currentRoute = new LinkedList<>();
         LOGGER.info("Created elevator : " + this);
     }
-    public LinkedHashSet<Integer> getCurrentRoute() {
+    public LinkedList<Integer> getCurrentRoute() {
         return currentRoute;
     }
 
@@ -59,15 +57,14 @@ public class Elevator implements IElevator, Runnable {
         this.onFloorCallback = onFloorCallback;
     }
 
-
     public void startElevatorMovement() {
-//        System.out.println(configuration.speed);
         if (!isActive) {
             this.isActive = true;
             onFloorTimer = new Timer();
-            onFloorTimer.schedule(onFloorCallback, 0, configuration.speed);
+            onFloorTimer.schedule(onFloorCallback, 0, configuration.speed * 1000);
         } else {
-            onFloorTimer.schedule(onFloorCallback, 0, configuration.speed);
+            onFloorTimer = new Timer();
+            onFloorTimer.schedule(onFloorCallback, 0, configuration.speed * 1000);
         }
     }
 
@@ -82,7 +79,7 @@ public class Elevator implements IElevator, Runnable {
     public int changeFloor() {
         defineDirection();
         int nextFloor = currentFloor + direction.getValue();
-        if(isAbleToChangeFloor(nextFloor)) {
+        if(isAbleToChangeFloor(nextFloor) && currentRoute.size() > 0) {
             currentFloor = nextFloor;
         }
         LOGGER.info("Elevator " + id + " on floor " + currentFloor);
@@ -96,51 +93,57 @@ public class Elevator implements IElevator, Runnable {
             var passenger = i.next();
             if(passenger.getFloorTarget() == currentFloor) {
                 i.remove();
-//                System.out.println("Passenger goes: " + passenger);
+                LOGGER.info("Passenger with weight " + passenger.getWeight() + " goes on floor " +  currentFloor);
             }
         }
     }
 
     @Override
     public void call(int floor) {
-        callingQueue.add(floor);
+        buildRoute();
+        if (!currentRoute.contains(floor)) {
+            currentRoute.add(floor);
+        }
+        defineDirection();
         state.onCall();
     }
 
     public void buildRoute() {
-        var route = new LinkedHashSet<Integer>();
+        var route = new LinkedList<Integer>();
 
         for (var passenger: getPassengers()) {
             route.add(passenger.getFloorTarget());
+        }
 
-        }
-        for (var floor: getCallingQueue()) {
-            if(!route.contains(floor))
-                route.add(floor);
-        }
         currentRoute = route;
     }
 
     public boolean popFromRoute() {
-        currentRoute.remove(currentFloor);
+        Iterator<Integer> i = currentRoute.iterator();
+        if(i.hasNext() ) {
+            var val = i.next();
+            if(val == currentFloor)
+                i.remove();
+        }
         return currentRoute.isEmpty();
     }
 
     public void defineDirection() {
         var currentRouteList = new ArrayList<>(currentRoute);
+        if(currentRouteList.size() == 0) return;
         if(currentRouteList.get(0) > currentFloor) {
             direction = ElevatorDirection.UP;
         } else if(currentRouteList.get(0) < currentFloor){
             direction = ElevatorDirection.DOWN;
         }
-//        System.out.println("Direction: " + direction);
     }
 
     @Override
     public boolean addPassenger(Passenger passenger) {
         if(isAbleToAddPassenger(passenger)) {
+            LOGGER.info("Added passenger: " + passenger.getWeight());
             this.passengers.add(passenger);
-//            System.out.println("Added passenger: " + passenger.getFloorTarget());
+            buildRoute();
             return true;
         } else {
 
@@ -151,11 +154,6 @@ public class Elevator implements IElevator, Runnable {
     @Override
     public ArrayList<Passenger> getPassengers() {
         return passengers;
-    }
-
-    @Override
-    public ArrayList<Integer> getCallingQueue() {
-        return callingQueue;
     }
 
     private boolean isAbleToAddPassenger(Passenger passenger) {
@@ -198,7 +196,6 @@ public class Elevator implements IElevator, Runnable {
                 ", configuration=" + configuration +
                 ", passengers=" + passengers +
                 ", currentRoute=" + currentRoute +
-                ", callingQueue=" + callingQueue +
                 ", onFloorTimer=" + onFloorTimer +
                 ", onFloorCallback=" + onFloorCallback +
                 ", currentFloor=" + currentFloor +

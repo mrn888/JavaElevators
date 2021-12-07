@@ -15,7 +15,7 @@ public class StoppedState extends ElevatorState {
 
     @Override
     public void onFloor(IFloor floor) {
-
+        LOGGER.info("CURRENT ROUTE: " + elevator.getCurrentRoute());
     }
 
     @Override
@@ -25,15 +25,9 @@ public class StoppedState extends ElevatorState {
 
     @Override
     public void onCall() {
-        elevator.buildRoute();
-        elevator.defineDirection();
         elevator.changeState(new MovingState(elevator));
     }
 
-    @Override
-    public void onStatus() {
-
-    }
 
     @Override
     public String getState() {

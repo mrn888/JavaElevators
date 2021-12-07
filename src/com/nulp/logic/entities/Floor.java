@@ -20,20 +20,22 @@ public class Floor implements IFloor {
     Boolean isActive;
     int passengerFrequency;
 
-    Floor(int id, int passengerFrequency, TimerTask passengerGenerator) {
+    Floor(int id, int passengerFrequency) {
         passengers = new ArrayList<>();
         int elevatorsAmount = BuildingConfiguration.getInstance().getElevatorConfiguration().size();
         for(int i = 0 ; i < elevatorsAmount; ++i) {
             passengers.add(new ArrayList<>());
         }
-        this.passengerGenerator = passengerGenerator;
         this.passengerFrequency = passengerFrequency;
         this.id = id;
 
         setPassengerFrequency(this.passengerFrequency);
 
-        passengerTimer = new Timer();
         LOGGER.info("Created floor : " + this);
+    }
+
+    public void setPassengerGenerator(TimerTask passengerGenerator) {
+        this.passengerGenerator = passengerGenerator;
     }
 
     public void generatePassengers() {
@@ -41,19 +43,20 @@ public class Floor implements IFloor {
             if(queue.size() + 1 < MainConfiguration.MAX_PASSENGERS) {
                 Passenger passenger = new Passenger(Passenger.getRandomPassengerWeight());
                 queue.add(passenger);
-                LOGGER.info("Created random passenger : " + passenger);
+                LOGGER.info("Created random passenger : " + passenger + " on floor " + id);
             }
         });
     }
 
     public void setPassengerFrequency(int passengerFrequency) {
         int random =  ThreadLocalRandom.current().nextInt(1, (int)(passengerFrequency/3));
-        this.passengerFrequency = passengerFrequency - random;
+        this.passengerFrequency = passengerFrequency;
     }
 
     public void startPassengerGenerating() {
         this.isActive = true;
-        passengerTimer.schedule(passengerGenerator,2, this.passengerFrequency);
+        passengerTimer = new Timer();
+        passengerTimer.schedule(passengerGenerator,0, this.passengerFrequency * 1000);
 
     }
 

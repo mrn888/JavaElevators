@@ -14,6 +14,9 @@ public class PlainStrategy implements IElevatorStrategy {
     public boolean shouldStopOnFloor(IElevator elevator) {
         var currentRouteList = new ArrayList<>(elevator.getCurrentRoute());
         LOGGER.info(currentRouteList + " , current floor: " + elevator.getCurrentFloor());
+        boolean shouldStop = currentRouteList.get(0) == elevator.getCurrentFloor();
+        if (shouldStop) LOGGER.info("Stopped on floor " + elevator.getCurrentFloor());
+
         return currentRouteList.get(0) == elevator.getCurrentFloor();
     }
 
