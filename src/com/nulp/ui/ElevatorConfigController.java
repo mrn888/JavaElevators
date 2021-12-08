@@ -3,6 +3,7 @@ import com.nulp.logic.configuration.*;
 import com.nulp.logic.strategy.*;
 
 import com.nulp.logic.utils.MyLogger;
+import com.nulp.logic.configuration.MainConfiguration;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -63,7 +64,7 @@ public class ElevatorConfigController implements Initializable {
 
             elevatorsConfigDataGrid.addRow(i);
 
-            var elevatorName = new Label("Elevator " + String.valueOf(i + 1));
+            var elevatorName = new Label("Ліфт #" + String.valueOf(i + 1));
             elevatorsConfigDataGrid.add(elevatorName, 0, i);
             elevatorsConfigDataGrid.setHalignment(getNodeFromGridPane(elevatorsConfigDataGrid, 0, i), HPos.CENTER);
 
@@ -75,41 +76,19 @@ public class ElevatorConfigController implements Initializable {
 
             var maxWeightTextBox = new javafx.scene.control.TextField();
             maxWeightTextBox.setText(String.valueOf(MainConfiguration.DEFAULT_WEIGHT));
-            maxWeightTextBox.textProperty().addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                    if (!newValue.matches("\\d*")) {
-                        maxWeightTextBox.setText(newValue.replaceAll("[^\\d]", ""));
-                    }
-                }
-            });
+            maxWeightTextBox.textProperty().addListener(new TextFieldNumbersOnlyValidator(maxWeightTextBox));
             elevatorsConfigDataGrid.add(maxWeightTextBox, 2, i);
             elevatorsConfigDataGrid.setHalignment(getNodeFromGridPane(elevatorsConfigDataGrid, 2, i), HPos.CENTER);
 
             var maxPeopleInElevator = new javafx.scene.control.TextField();
             maxPeopleInElevator.setText(String.valueOf(MainConfiguration.DEFAULT_PASSENGERS));
-            maxPeopleInElevator.textProperty().addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                    if (!newValue.matches("\\d*")) {
-                        maxPeopleInElevator.setText(newValue.replaceAll("[^\\d]", ""));
-                    }
-                }
-            });
+            maxPeopleInElevator.textProperty().addListener(new TextFieldNumbersOnlyValidator(maxPeopleInElevator));
             elevatorsConfigDataGrid.add(maxPeopleInElevator, 3, i);
             elevatorsConfigDataGrid.setHalignment(getNodeFromGridPane(elevatorsConfigDataGrid, 3, i), HPos.CENTER);
 
-
             var elevatorSpeed = new javafx.scene.control.TextField();
             elevatorSpeed.setText(String.valueOf(MainConfiguration.DEFAULT_ELEVATOR_SPEED));
-            elevatorSpeed.textProperty().addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                    if (!newValue.matches("\\d*")) {
-                        elevatorSpeed.setText(newValue.replaceAll("[^\\d]", ""));
-                    }
-                }
-            });
+            elevatorSpeed.textProperty().addListener(new TextFieldNumbersOnlyValidator(elevatorSpeed));
             elevatorsConfigDataGrid.add(elevatorSpeed, 4, i);
             elevatorsConfigDataGrid.setHalignment(getNodeFromGridPane(elevatorsConfigDataGrid, 4, i), HPos.CENTER);
         }
@@ -143,29 +122,59 @@ public class ElevatorConfigController implements Initializable {
             } else if (GridPane.getColumnIndex(node) == 2) { // max weigth
 
                 try {
-                    int maxWeight = Integer.parseInt (((TextField)node).getText());
-                    elevatorConfigurations.get(currentRow).weight = maxWeight;
+                    int maxElevatorLoad = Integer.parseInt (((TextField)node).getText());
+
+                    if (maxElevatorLoad < MainConfiguration.MIN_ELEVATOR_LOAD ||
+                            maxElevatorLoad > MainConfiguration.MAX_ELEVATOR_LOAD)
+                    {
+                        generateAlertOnInvalidValue("вантажності",
+                                MainConfiguration.MIN_ELEVATOR_LOAD, MainConfiguration.MAX_ELEVATOR_LOAD,
+                                currentRow + 1);
+                        return;
+                    }
+
+                    elevatorConfigurations.get(currentRow).weight = maxElevatorLoad;
                 } catch(NumberFormatException exc)
                 {
-                    generateAlertOnEmptyNumberField("max weigth", currentRow + 1);
+                    generateAlertOnEmptyNumberField("вантажності", currentRow + 1);
                     return;
                 }
             } else if (GridPane.getColumnIndex(node) == 3) { // max passengers count
                 try {
                     int maxPassengerNumber = Integer.parseInt (((TextField)node).getText());
+
+                    if (maxPassengerNumber < MainConfiguration.MIN_PASSENGERS_COUNT ||
+                            maxPassengerNumber > MainConfiguration.MAX_PASSENGERS_COUNT)
+                    {
+                        generateAlertOnInvalidValue("к-сті людей",
+                                MainConfiguration.MIN_PASSENGERS_COUNT, MainConfiguration.MAX_PASSENGERS_COUNT,
+                                currentRow + 1);
+                        return;
+                    }
+
                     elevatorConfigurations.get(currentRow).capacity = maxPassengerNumber;
                 } catch(NumberFormatException exc)
                 {
-                    generateAlertOnEmptyNumberField("max passenger number", currentRow + 1);
+                    generateAlertOnEmptyNumberField("к-сті людей", currentRow + 1);
                     return;
                 }
             } else if (GridPane.getColumnIndex(node) == 4) { // speed
                 try {
-                    int maxElevators = Integer.parseInt (((TextField)node).getText());
-                    elevatorConfigurations.get(currentRow).speed = maxElevators;
+                    int maxElevatorsSpeed = Integer.parseInt (((TextField)node).getText());
+
+                    if (maxElevatorsSpeed < MainConfiguration.MIN_ELEVATOR_SPEED ||
+                            maxElevatorsSpeed > MainConfiguration.MAX_ELEVATOR_SPEED)
+                    {
+                        generateAlertOnInvalidValue("швидкості",
+                                MainConfiguration.MIN_ELEVATOR_SPEED, MainConfiguration.MAX_ELEVATOR_SPEED,
+                                currentRow + 1);
+                        return;
+                    }
+
+                    elevatorConfigurations.get(currentRow).speed = maxElevatorsSpeed;
                 } catch(NumberFormatException exc)
                 {
-                    generateAlertOnEmptyNumberField("elevator speed", currentRow + 1);
+                    generateAlertOnEmptyNumberField("швидкості", currentRow + 1);
                     return;
                 }
             }
@@ -178,8 +187,19 @@ public class ElevatorConfigController implements Initializable {
     {
         LOGGER.info("Enter empty value");
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Invalid data");
-        alert.setContentText("Empty " + fieldName + " for " + "Elevator" + atRow);
+        alert.setTitle("Невалідні дані");
+        alert.setContentText("Пусте поле " + fieldName + " для ліфта №" + atRow);
+        alert.showAndWait().ifPresent(rs -> {
+        });
+    }
+
+    void generateAlertOnInvalidValue(String fieldName, int minValue, int maxValue, int atRow)
+    {
+        LOGGER.info("Enter invalid value");
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Невалідні дані");
+        alert.setContentText("Невалідне значення " + fieldName + " для ліфта № " + atRow +
+                "\n мін. можливе значення: " + minValue + "\n макс. можливе значення: " + maxValue + "\n");
         alert.showAndWait().ifPresent(rs -> {
         });
     }
